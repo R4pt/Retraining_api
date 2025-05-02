@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException
 import joblib
-import polars as pl
+import pandas as pd
 import uvicorn
+
 app = FastAPI(title="API de Predicción de Depósitos")
 
 model = joblib.load("best_logistic_model.joblib")
@@ -20,26 +21,36 @@ def predict(
         marital: int,
         education: int,
         default: int,
-        month: int
+        month: int,
+        job: int = 0,
+        contact: int = 0,
+        poutcome: int = 0
 ):
     try:
-        data = {
-            "age": age,
-            "balance": balance,
-            "day": day,
-            "duration": duration,
-            "campaign": campaign,
-            "pdays": pdays,
-            "previous": previous,
-            "housing": housing,
-            "loan": loan,
-            "marital": marital,
-            "education": education,
-            "default": default,
-            "month": month
+        input_data = {
+            "age": [age],
+            "marital": [marital],
+            "education": [education],
+            "default": [default],
+            "balance": [balance],
+            "housing": [housing],
+            "loan": [loan],
+            "day": [day],
+            "month": [month],
+            "duration": [duration],
+            "campaign": [campaign],
+            "pdays": [pdays],
+            "previous": [previous]
         }
 
-        df = pl.DataFrame([data])
+        feature_order = [
+            "age", "marital", "education", "default", "balance",
+            "housing", "loan", "day", "month", "duration",
+            "campaign", "pdays", "previous"
+        ]
+
+        df = pd.DataFrame(input_data)
+        df = df[feature_order]
 
         prediction = model.predict(df)[0]
 
@@ -53,9 +64,10 @@ def predict(
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error al realizar la predicción: {str(e)}")
 
+
 if __name__ == "__main__":
     uvicorn.run(
         "endpoints:app",
-        host="0.0.0.0",
-        port=8000
+        port=8000,
+        reload=True
     )
