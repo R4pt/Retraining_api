@@ -11,8 +11,7 @@ import joblib
 file_path = 'bank.csv'
 df = pl.read_csv(file_path)
 
-df_cleaned = df.drop_nans()
-df_cleaned = df_cleaned.drop_nulls()
+df_cleaned = df.drop_nulls()
 
 df_cleaned = df_cleaned.with_columns(
     (pl.when(pl.col("housing") == "no").then(0).otherwise(1).cast(pl.Int8()).alias("housing")),
