@@ -9,6 +9,7 @@ model = joblib.load("best_logistic_model.joblib")
 
 @app.post("/predict")
 
+
 def predict(
         age: int,
         balance: float,
