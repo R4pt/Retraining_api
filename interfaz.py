@@ -210,8 +210,8 @@ if st.button("Realizar Predicción", type="primary"):
                 st.write("Status code:", response.status_code)
                 try:
                     st.write("Respuesta detallada:", response.json())
-                except:
-                    st.write("Texto de la respuesta:", response.text)
+                except requests.exceptions.HTTPError as http_err:
+                    st.write("Se a producido un error: ", http_err)
 
         except Exception as e:
             st.error(f"Error al conectar con la API: {str(e)}")
