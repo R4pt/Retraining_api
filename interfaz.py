@@ -19,11 +19,9 @@ API_URL = "http://127.0.0.1:8000/predict"
 with st.sidebar:
     st.header("Acerca de")
     st.info("""
-    Esta aplicación utiliza un modelo de machine learning entrenado 
-    con datos bancarios para predecir la probabilidad de que un cliente 
-    realice un depósito. La predicción se basa en características 
-    personales y financieras del cliente.
-    """)
+    Esta aplicación utiliza un modelo de machine learning entrenado con datos bancarios para predecir la probabilidad 
+    de que un cliente realice un depósito. La predicción se basa en características
+    personales y financieras del cliente. """)
 
     st.header("Instrucciones")
     st.markdown("""
@@ -118,7 +116,8 @@ with col3:
     duration = st.slider("Duración del último contacto (segundos)", min_value=0, max_value=5000, value=180)
     campaign = st.slider("Número de contactos durante esta campaña", min_value=1, max_value=50, value=2)
     pdays = st.slider("Días desde el contacto anterior (-1 = nunca contactado)", min_value=-1, max_value=999, value=-1)
-    previous = st.slider("Número de contactos previos a esta campaña", min_value=0, max_value=20, value=0)
+    previous = st.slider("Número de contactos previos a esta campaña",
+                         min_value=0, max_value=20, value=0)
 
     poutcome_options = {0: "Desconocido", 1: "Fracaso", 2: "Otro", 3: "Éxito"}
     poutcome = st.selectbox(
@@ -174,9 +173,12 @@ if st.button("Realizar Predicción", type="primary"):
                         st.subheader("Factores importantes")
                         st.markdown("""
                         Los factores que más influyen en esta predicción son:
-                        - **Duración del contacto**: Contactos más largos suelen indicar mayor interés
-                        - **Saldo bancario**: Clientes con saldos más altos tienen mayor probabilidad de hacer depósitos
-                        - **Edad**: Los rangos de edad medios suelen tener comportamientos más predecibles
+                        - **Duración del contacto**: Contactos más largos 
+                        suelen indicar mayor interés
+                        - **Saldo bancario**: Clientes con saldos más altos tienen mayor 
+                        probabilidad de hacer depósitos
+                        - **Edad**: Los rangos de edad medios suelen 
+                        tener comportamientos más predecibles
                         """)
 
                 st.subheader("Visualización de la predicción")
@@ -186,7 +188,8 @@ if st.button("Realizar Predicción", type="primary"):
                     title={'text': "Probabilidad de depósito"},
                     gauge={
                         'axis': {'range': [0, 100]},
-                        'bar': {'color': "#1f77b4" if result["valor_prediccion"] == 1 else "#d62728"},
+                        'bar': {'color': "#1f77b4" if result["valor_prediccion"] == 1
+                        else "#d62728"},
                         'steps': [
                             {'range': [0, 50], 'color': "#ffcccc"},
                             {'range': [50, 100], 'color': "#ccffcc"}
