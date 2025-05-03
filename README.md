@@ -127,10 +127,4 @@ Para mantener el modelo actualizado:
 2. Ejecute `python retraining.py` para reentrenar el modelo
 3. Reinicie la API para que utilice el nuevo modelo entrenado
 
-## Licencia
 
-[Incluir información de licencia aquí]
-
-## Contacto
-
-[Incluir información de contacto aquí]
