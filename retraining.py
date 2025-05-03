@@ -4,23 +4,22 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc, accuracy_score
+from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 import joblib
 
 file_path = 'bank.csv'
 df = pl.read_csv(file_path)
 
-df_cleaned = df.drop_nans()
-df_cleaned = df_cleaned.drop_nulls()
+df_cleaned = df.drop_nulls()
 
 df_cleaned = df_cleaned.with_columns(
     (pl.when(pl.col("housing") == "no").then(0).otherwise(1).cast(pl.Int8()).alias("housing")),
     (pl.when(pl.col("loan") == "no").then(0).otherwise(1).cast(pl.Int8()).alias("loan")),
     (pl.when(pl.col("marital") == "divorced").then(0).otherwise(1).cast(pl.Int8()).alias("marital")),
     (pl.when(pl.col("education") == "secondary").then(0).otherwise(1).cast(pl.Int8()).alias("education")),
-    (pl.col("default").map_elements(lambda x: False if x.lower() == "no" else True, return_dtype=pl.Boolean)).cast(pl.Int8()).alias("default"),
-    (pl.col("deposit").map_elements(lambda x: False if x.lower() == "no" else True, return_dtype=pl.Boolean)).cast(pl.Int8()).alias("deposit"),
+    (pl.col("default").map_elements(lambda x: x.lower() != "no" , return_dtype=pl.Boolean)).cast(pl.Int8()).alias("default"),
+    (pl.col("deposit").map_elements(lambda x: x.lower() != "no", return_dtype=pl.Boolean)).cast(pl.Int8()).alias("deposit"),
     pl.when(pl.col("month") == "jan").then(1).when(pl.col("month") == "feb").then(2).when(pl.col("month") == "mar").then(3).when(pl.col("month") == "apr").then(4).when(pl.col("month") == "may").then(5)
       .when(pl.col("month") == "jun").then(6).when(pl.col("month") == "jul").then(7).when(pl.col("month") == "aug").then(8).when(pl.col("month") == "sep").then(9)
       .when(pl.col("month") == "oct").then(10).when(pl.col("month") == "nov").then(11).when(pl.col("month") == "dec").then(12).cast(pl.Int8()).alias("month")
