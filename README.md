@@ -14,6 +14,8 @@ El sistema utiliza un modelo de regresión logística entrenado con datos bancar
 
 - Python 3.8 o superior
 - Dependencias listadas en `requirements.txt`
+- DVC (Data Version Control) para versionamiento de datos y modelos
+- Cuenta AWS con acceso a S3
 
 ## Instalación
 
@@ -27,6 +29,16 @@ El sistema utiliza un modelo de regresión logística entrenado con datos bancar
    pip install -r requirements.txt
    ```
 
+3. Instale DVC con soporte para S3:
+   ```
+   pip install dvc[s3]
+   ```
+
+4. Configure las credenciales de AWS:
+   ```
+   aws configure
+   ```
+
 ## Estructura del proyecto
 
 - `bank.csv`: Datos de entrenamiento del modelo
@@ -37,6 +49,60 @@ El sistema utiliza un modelo de regresión logística entrenado con datos bancar
 - `metrics.txt`: Métricas de rendimiento del modelo
 - `feature_importance.png`: Visualización de la importancia de las características
 - `best_logistic_model.joblib`: Modelo entrenado guardado
+- `.dvc/`: Directorio de configuración de DVC
+- `*.dvc`: Archivos de seguimiento de DVC
+
+## Versionamiento de Datos y Modelos con DVC
+
+Este proyecto utiliza DVC para versionar los datos y modelos, almacenándolos en AWS S3.
+
+### Configuración Inicial de DVC
+
+Si estás trabajando con este proyecto por primera vez:
+
+1. Obtén los datos y modelos versionados:
+   ```
+   dvc pull
+   ```
+
+### Acceso a Versiones Anteriores
+
+Para acceder a una versión específica:
+
+1. Cambia a la versión deseada del código:
+   ```
+   git checkout <tag-o-commit>
+   ```
+
+2. Obtén los datos y modelos correspondientes:
+   ```
+   dvc checkout
+   ```
+
+### Publicación de Nuevas Versiones
+
+Después de entrenar un nuevo modelo:
+
+1. Versiona los datos y modelos:
+   ```
+   dvc add bank.csv best_logistic_model.joblib
+   ```
+
+2. Guarda los cambios en Git:
+   ```
+   git add bank.csv.dvc best_logistic_model.joblib.dvc
+   git commit -m "Actualizar datos y modelo"
+   ```
+
+3. Etiqueta la versión (opcional):
+   ```
+   git tag -a "v1.1" -m "Nueva versión del modelo"
+   ```
+
+4. Sube los datos y modelos al almacenamiento:
+   ```
+   dvc push
+   ```
 
 ## Entrenamiento del modelo
 
@@ -119,12 +185,27 @@ El proyecto sigue una arquitectura de tres capas:
 2. **Capa de API**: Implementada con FastAPI, proporciona endpoints para realizar predicciones
 3. **Capa de presentación**: Interfaz gráfica implementada con Streamlit
 
+## Reproducibilidad con DVC
+
+El proyecto está configurado para garantizar la reproducibilidad:
+
+1. Los archivos grandes (datos y modelos) se almacenan en AWS S3 y se versionan con DVC
+2. El código fuente y los archivos de configuración se versionan con Git
+3. Las métricas del modelo se registran automáticamente con cada entrenamiento
+
+Para reproducir un experimento específico:
+
+1. Checkout la versión de Git correspondiente
+2. Ejecute `dvc checkout` para obtener los datos y modelos correspondientes
+3. Ejecute `dvc repro` para reproducir el pipeline completo
+
 ## Mantenimiento
 
 Para mantener el modelo actualizado:
 
 1. Actualice el archivo `bank.csv` con nuevos datos
 2. Ejecute `python retraining.py` para reentrenar el modelo
-3. Reinicie la API para que utilice el nuevo modelo entrenado
-
-
+3. Versione los cambios con DVC: `dvc add bank.csv best_logistic_model.joblib`
+4. Confirme los cambios en Git: `git add *.dvc && git commit -m "Actualizar modelo"`
+5. Suba los datos y modelos a S3: `dvc push`
+6. Reinicie la API para que utilice el nuevo modelo entrenado
