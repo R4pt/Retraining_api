@@ -16,7 +16,6 @@ Esta aplicación te permite predecir si un cliente realizará un depósito banca
 basado en diferentes características. Completa el formulario y obtén una predicción al instante.
 """)
 
-# URL del endpoint de predicción
 API_URL = "http://127.0.0.1:8000/predict"
 
 with st.sidebar:
@@ -41,7 +40,6 @@ with col1:
     st.subheader("Datos personales")
     age = st.slider("Edad", min_value=18, max_value=95, value=35)
 
-    # Agregamos la opción de trabajo
     job_options = {
         0: "Administrativo",
         1: "Autónomo",
@@ -98,7 +96,6 @@ with col2:
         format_func=lambda x: loan_options[x]
     )
 
-    # Añadimos tipo de contacto
     contact_options = {0: "Desconocido", 1: "Teléfono", 2: "Celular"}
     contact = st.selectbox(
         "Tipo de contacto",
@@ -125,7 +122,6 @@ with col3:
     pdays = st.slider("Días desde el contacto anterior (-1 = nunca contactado)", min_value=-1, max_value=999, value=-1)
     previous = st.slider("Número de contactos previos a esta campaña", min_value=0, max_value=20, value=0)
 
-    # Añadimos resultado de campaña anterior
     poutcome_options = {0: "Desconocido", 1: "Fracaso", 2: "Otro", 3: "Éxito"}
     poutcome = st.selectbox(
         "Resultado de la campaña anterior",
@@ -139,7 +135,6 @@ prediccion_container = st.container()
 if st.button("Realizar Predicción", type="primary"):
     with st.spinner("Realizando predicción..."):
         try:
-            # Preparamos los parámetros en un diccionario
             params = {
                 "age": age,
                 "job": job,
@@ -159,7 +154,6 @@ if st.button("Realizar Predicción", type="primary"):
                 "poutcome": poutcome
             }
 
-            # Enviamos la solicitud usando query parameters
             response = requests.post(API_URL, params=params)
 
             if response.status_code == 200:
@@ -213,7 +207,6 @@ if st.button("Realizar Predicción", type="primary"):
 
             else:
                 st.error(f"Error en la API: {response.text}")
-                # Mostramos información detallada para ayudar a depurar
                 st.write("Status code:", response.status_code)
                 try:
                     st.write("Respuesta detallada:", response.json())
