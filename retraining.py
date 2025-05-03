@@ -20,12 +20,15 @@ df_cleaned = df_cleaned.with_columns(
     (pl.when(pl.col("education") == "secondary").then(0).otherwise(1).cast(pl.Int8()).alias("education")),
     (pl.col("default").map_elements(lambda x: x.lower() != "no" , return_dtype=pl.Boolean)).cast(pl.Int8()).alias("default"),
     (pl.col("deposit").map_elements(lambda x: x.lower() != "no", return_dtype=pl.Boolean)).cast(pl.Int8()).alias("deposit"),
-    pl.when(pl.col("month") == "jan").then(1).when(pl.col("month") == "feb").then(2).when(pl.col("month") == "mar").then(3).when(pl.col("month") == "apr").then(4).when(pl.col("month") == "may").then(5)
-      .when(pl.col("month") == "jun").then(6).when(pl.col("month") == "jul").then(7).when(pl.col("month") == "aug").then(8).when(pl.col("month") == "sep").then(9)
-      .when(pl.col("month") == "oct").then(10).when(pl.col("month") == "nov").then(11).when(pl.col("month") == "dec").then(12).cast(pl.Int8()).alias("month")
+    pl.when(pl.col("month") == "jan").then(1).when(pl.col("month") == "feb").then(2).when(pl.col("month") == "mar")
+    .then(3).when(pl.col("month") == "apr").then(4).when(pl.col("month") == "may").then(5)
+    .when(pl.col("month") == "jun").then(6).when(pl.col("month") == "jul").then(7)
+    .when(pl.col("month") == "aug").then(8).when(pl.col("month") == "sep").then(9)
+    .when(pl.col("month") == "oct").then(10).when(pl.col("month") == "nov").then(11)
+    .when(pl.col("month") == "dec").then(12).cast(pl.Int8()).alias("month")
 )
 
-df_cleaned = df_cleaned.drop(["contact","poutcome", "job"])
+df_cleaned = df_cleaned.drop (["contact", "poutcome", "job"])
 
 unnamed_columns = [col for col in df_cleaned.columns if col == ""]
 if unnamed_columns:
