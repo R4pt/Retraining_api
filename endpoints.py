@@ -22,9 +22,7 @@ def predict(
         education: int,
         default: int,
         month: int,
-        job: int = 0,
-        contact: int = 0,
-        poutcome: int = 0
+
 ):
     try:
         input_data = {
