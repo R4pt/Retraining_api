@@ -52,8 +52,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build docker image
-        run: docker build -t napsterz4/mlops_simple_workflow:dev .
+        run: docker build -t gunth3r/new-repo:develop .
 
       - name: Docker push to Dockerhub
-        run: docker push napsterz4/mlops_simple_workflow:dev
+        run: docker push gunth3r/new-repo:develop
 
