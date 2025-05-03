@@ -5,6 +5,9 @@ name = "python"
 enabled = true
 
 [analyzers.meta]
+runtime_version = "3.x.x"
+type = "python"
+max_line_length = 100
 root = "."
 
 #[[transformers]]
